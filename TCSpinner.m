@@ -103,6 +103,14 @@ NSString * const BL_ANIMATION_KEY = @"BL_Animation";
     return _spinnerSpeed;
 }
 
+@synthesize repeatCount = _repeatCount;
+- (int)repeatCount
+{
+    if(!_repeatCount)
+        _repeatCount = 0;
+    return _repeatCount;
+}
+
 #pragma mark Initialization
 
 - (id)init
@@ -197,6 +205,19 @@ NSString * const BL_ANIMATION_KEY = @"BL_Animation";
         [self.circleBL removeAnimationForKey:BL_FADEOUT_ANIMATION_KEY];
         [self.circleBL setOpacity:0.0];
     }
+    
+    //stop the circles from animating
+    if([name isEqualToString:TL_ANIMATION_KEY])
+        [self stopAnimating];
+    
+    if([name isEqualToString:TR_ANIMATION_KEY])
+        [self stopAnimating];
+    
+    if([name isEqualToString:BR_ANIMATION_KEY])
+        [self stopAnimating];
+    
+    if([name isEqualToString:BL_ANIMATION_KEY])
+        [self stopAnimating];
 }
 
 #pragma mark Controls
@@ -230,10 +251,21 @@ NSString * const BL_ANIMATION_KEY = @"BL_Animation";
             [self.circleBL addAnimation:bLFadeIn forKey:BL_FADEIN_ANIMATION_KEY];
         }
         
-        [self.circleTL addAnimation:[self positionAnimation:self.circleTLStartPoint endPoint:self.circleTRStartPoint] forKey:TL_ANIMATION_KEY];
-        [self.circleTR addAnimation:[self positionAnimation:self.circleTRStartPoint endPoint:self.circleBRStartPoint] forKey:TR_ANIMATION_KEY];
-        [self.circleBR addAnimation:[self positionAnimation:self.circleBRStartPoint endPoint:self.circleBLStartPoint] forKey:BR_ANIMATION_KEY];
-        [self.circleBL addAnimation:[self positionAnimation:self.circleBLStartPoint endPoint:self.circleTLStartPoint] forKey:BL_ANIMATION_KEY];
+        CABasicAnimation *tlA = [self positionAnimation:self.circleTLStartPoint endPoint:self.circleTRStartPoint];
+        [tlA setValue:TL_ANIMATION_KEY forKey:NAME_KEY];
+        [self.circleTL addAnimation:tlA forKey:TL_ANIMATION_KEY];
+        
+        CABasicAnimation *trA = [self positionAnimation:self.circleTRStartPoint endPoint:self.circleBRStartPoint];
+        [trA setValue:TR_ANIMATION_KEY forKey:NAME_KEY];
+        [self.circleTR addAnimation:trA forKey:TR_ANIMATION_KEY];
+        
+        CABasicAnimation *brA = [self positionAnimation:self.circleBRStartPoint endPoint:self.circleBLStartPoint];
+        [brA setValue:BR_ANIMATION_KEY forKey:NAME_KEY];
+        [self.circleBR addAnimation:brA forKey:BR_ANIMATION_KEY];
+        
+        CABasicAnimation *blA = [self positionAnimation:self.circleBLStartPoint endPoint:self.circleTLStartPoint];
+        [blA setValue:BL_ANIMATION_KEY forKey:NAME_KEY];
+        [self.circleBL addAnimation:blA forKey:BL_ANIMATION_KEY];
         
     }
 }
@@ -280,7 +312,9 @@ NSString * const BL_ANIMATION_KEY = @"BL_Animation";
     [anim setFillMode:kCAFillModeForwards];
     [anim setDuration:self.spinnerSpeed];
     [anim setTimingFunction:self.timingFunction];
-    anim.repeatDuration = HUGE_VALF;
+    //anim.repeatDuration = HUGE_VALF;
+    anim.repeatCount = self.repeatCount;
+    anim.delegate = self;
     return anim;
 }
 

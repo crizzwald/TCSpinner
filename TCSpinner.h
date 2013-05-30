@@ -36,6 +36,7 @@
 @property (nonatomic) BOOL fadeIn;
 @property (nonatomic) BOOL fadeOut;
 @property (nonatomic) float fadeSpeed;
+@property (nonatomic) int repeatCount;
 @property (nonatomic, strong) CAMediaTimingFunction * timingFunction;
 @property (nonatomic) float spinnerSpeed;
 
