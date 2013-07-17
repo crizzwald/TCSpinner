@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'TCSpinner'
-  s.version      = '1.0.0'
+  s.version      = '1.1.0'
   s.summary      = 'A UIView subclass containing four circles that animate towards one another.'
   s.homepage     = 'https://github.com/crizzwald/TCSpinner'
   s.license      = { :type => 'PERSONAL', :file => 'LICENSE' }
